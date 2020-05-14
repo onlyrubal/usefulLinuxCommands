@@ -12,5 +12,8 @@ Depending on the operating system, like Windows have PuTTY and linux has command
 
 ```bash
 ssh user_name@MACHINE_IP
+
+##for example
+ssh bob@10.10.203.34
 ```
 After this it would prompt to ask for the password and, after that we can interact with the remote machine through command line.
