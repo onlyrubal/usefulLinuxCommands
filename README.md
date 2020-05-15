@@ -50,6 +50,8 @@ ls -a
 ls -l
 ```
 
+![](https://imgur.com/uqIivIH.jpg)
+
 ## CAT
 
 It outputs the contents of the files to the console.
@@ -198,3 +200,155 @@ To learn about different types of shells:
 https://www.tecmint.com/different-types-of-linux-shells/
 
 ## Linux Operators
+
+### **">" operator**
+
+">" is the operator for output redirection. Meaning that you can redirect the output of any command to a file.
+For example if I were to run echo hello > file, then instead of outputting hello to the console, it would save that output to a file called file.
+
+```bash
+echo "This is the text" > fileName
+```
+
+It is worth noting that if you were to use this operator on a file that already exists, it would completely erase the contents of that file and replace it with the output from your command
+
+![Image of > operator](https://imgur.com/qpvaaLO.jpg)
+
+### **">>" operator**
+
+">>" does mainly the same thing as >, with one key difference. >> appends the output of a command to a file, instead of erasing it.
+
+```bash
+echo "This is the text" >> fileName
+```
+
+![Image of >> operator](https://imgur.com/QHZHCdt.jpg)
+
+### **"&&" operator**
+
+&& allows you to execute a second command after the first one has executed successfully.
+
+Meaning `ls && echo hello` will work fine, but `dljahfrsdkjlhfsdhjklfsdhkljfh && echo hello` will fail.
+
+![Image of &&](https://imgur.com/2LcM4I3.jpg)
+
+This is the command that we oftenly use in our day to day commands.
+
+```bash
+echo hello >> file && cat file
+```
+
+We created something in the first command and used it in the second command.
+
+### **"&" command**
+
+& is a shell backgrounding operator.
+
+Much unlike &&, & has nothing to do with and at all. & is a background operator, meaning say you run a command that takes 10 seconds to run, normally you wouldn't be able to run commands during that period; however, with & that command will still execute and you'll be able to run other commands.
+
+![](https://imgur.com/5XPAUBq.jpg)
+
+## **"\$" operator**
+
+It is used to denote environment variables.These are variables set by the computer(you can set them yourself but we'll get into that) that are used to affect different processes and how they work. Meaning that if you edit these variables you can change how certain processes work on your computer.
+
+If we want to read any environment variables, we can read it using \$ operator.
+
+```bash
+#Outputs the current user who has logged in.
+
+echo $USER
+
+## To display the shell that we are currently using.
+
+echo $SHELL
+
+## Display the value of home environment variable
+
+echo $HOME
+```
+
+## **Understanding Environment variables**
+
+### Set the environment variable.
+
+```bash
+export nootnoot = 1111
+
+echo $nootnoot
+
+#Shows the value set 1111
+```
+
+![](https://imgur.com/qjCpT08.jpg)
+
+### Unset the environment variable
+
+```bash
+unset VARIABLE_NAME
+```
+
+### List all the environment variables.
+
+```bash
+set
+```
+
+## PIPE "|" Operator
+
+The | operator allows you to take the output of a command and use it as input for a second command.
+
+![](https://imgur.com/psOTao5.jpg)
+
+## ";" Operator
+
+The ; operator works a lot like &&, however it does not require the first command to execute successfully.
+
+![](https://imgur.com/3FjiVnU.jpg)
+
+## CHMOD
+
+chmod allows you to set the different permissions for a file, and control who can read it.
+
+They're set using a three digit number, where each digit controls a specific permission, meaning
+
+First digit - controls the permissions for a user
+
+Second digit - controls the permission for a group
+
+Third digit - controls permissions for everyone that's not a part of the user or group.
+
+| Digit | Meaning                                         |
+| ----- | ----------------------------------------------- |
+| 1     | That file can be executed                       |
+| 2     | That file can be written to                     |
+| 3     | That file can be executed and written to        |
+| 4     | That file can be read                           |
+| 5     | That file can be read and executed              |
+| 6     | That file can be written to and read            |
+| 7     | That file can be read, written to, and executed |
+
+The way these values are calculated is this. The digit 1 means the file can be executed, the digit 2 means it can be written to, and the digit 4 means it can be read. You get the different permissions by adding these digits together. For example 1+2 is 3 meaning that file can be executed and written to. Now let's see how it all works in perspective.
+
+Now, understanding the permissions of the different files.
+
+- chmod 341 file : The file can be executed and written to by the user that owns the file. The file can be read by the group that owns the file. The file can be executed by everyone else.
+
+- chmod 777 file : The file can be read, written to, and executed by the user that owns the file. The file can be read, written to, and executed by the group that owns the file. The file can be read, written to, and executed by everyone else
+
+**ls** provides a helpful way of viewing the permissions of files in the current directory.
+
+![](https://imgur.com/MPSlodl.jpg)
+
+Recall that file permissions are divided into three sections, user and group and everyone else. The same is true here; however, everything starts from the second hyphen not the first, so we can just forget the first hyphen for now.
+
+The first three characters control permissions for the user, the second three characters control permissions for the group, and the final three characters control permissions for everyone else
+
+![](https://imgur.com/ZNaY6Iw.jpg)
+(U = user, G = group, E = everyone else)
+
+rw means as you might expect "read and write", meaning the user has read write perms to the file. Following that logic, that means members of the group and everyone else have only read perms. To convert that to numbers the permissions for that file in number form are 644. We can test this by trying to change the permissions
+
+![](https://imgur.com/hu9mkJC.jpg)
+
+Note: It is possible to give someone no perms to a file, You can just put 0 as the digit. 770 Means that everyone that isnt a part of the user or group cant do anything to the file.
