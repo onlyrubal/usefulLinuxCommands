@@ -127,11 +127,71 @@ https://www.geeksforgeeks.org/hexdump-command-in-linux-with-examples/
 hexdump -C shiba1
 ```
 
-## SU
+## SU AND SUDO
 
 su is a command that allows you to change the user, without logging out and logging back in again.
 
 Note : Typing **su** on its own is equivalent to typing **su root**.
+
+**Interactive:** As the term implies: Interactive means that the commands are run with user-interaction from keyboard. E.g. the shell can prompt the user to enter input.
+
+**Non-interactive:** the shell is probably run from an automated process so it can't assume if can request input or that someone will see the output. E.g Maybe it is best to write output to a log-file.
+
+**Login:** Means that the shell is run as part of the login of the user to the system. Typically used to do any configuration that a user needs/wants to establish his work-environment.
+
+**Non-login:** Any other shell run by the user after logging on, or which is run by any automated process which is not coupled to a logged in user.
+
+How to switch the User to root.
+
+The main difference between these commands is in the way they restrict access to their functions.
+
+su (which means "substitute user" or "switch user") - does exactly that, it starts another shell instance with privileges of the target user. To ensure you have the rights to do that, it asks you for the password of the target user. So, to become root, you need to know root password. If there are several users on your machine who need to run commands as root, they all need to know root password - note that it'll be the same password. If you need to revoke admin permissions from one of the users, you need to change root password and tell it only to those people who need to keep access - messy.
+
+sudo (hmm... what's the mnemonic? Super-User-DO?) is completely different. It uses a config file (`/etc/sudoers`) which lists which users have rights to specific actions (run commands as root, etc.) When invoked, it asks for the password of the user who started it - to ensure the person at the terminal is really the same "joe" who's listed in `/etc/sudoers`. To revoke admin privileges from a person, you just need to edit the config file (or remove the user from a group which is listed in that config). This results in much cleaner management of privileges.
+
+As a result of this, in many Debian-based systems root user has no password set - i.e. it's not possible to login as root directly.
+
+Also, `/etc/sudoers` allows to specify some additional options - i.e. user X is only able to run program Y etc.
+
+The often-used sudo su combination works as follows: first sudo asks you for your password, and, if you're allowed to do so, invokes the next command (su) as a super-user. Because su is invoked by root, it does not require you to enter the target user's password. So, sudo su allows you to open a shell as another user (including root), if you're allowed super-user access by the `/etc/sudoers` file.
+
+Refer this stackoverflow link:  
+https://askubuntu.com/questions/70534/what-are-the-differences-between-su-sudo-s-sudo-i-sudo-su
+
+Another useful link:
+
+http://researchhubs.com/post/computing/linux-cmd/sudo-command.html
+
+### SUDO
+
+sudo is Linux's run as administrator button, and the syntax goes `sudo <command>`.
+
+![](https://imgur.com/ejD2Dib.jpg)
+
+Note: whoami is just a command that states your current user.
+
+As you can see when using sudo the command is run as root. It is important to note that **you need to have your current user's password to use it.**
+
+NOTE:
+
+Not every user has the permission to use sudo. Only those users who are mentioned in the config file `/etc/sudoers`
+
+Login as root and give permission to the user for the sudo access.
+
+```bash
+# Adding user to the sudo group
+usermod -aG sudo username
+```
+
+```bash
+# To list your current sudo privileges(what commands you can run, who you can run them as etc.
+
+sudo -l
+```
+
+Refer this link to add some authorization rules while giving sudo permission.
+
+https://linuxize.com/post/how-to-add-user-to-sudoers-in-ubuntu/
 
 ## USERMOD UTILITY
 
@@ -146,6 +206,26 @@ When we execute ‘usermod‘ command in terminal, the following files are used 
 - /etc/group – Group account information.
 - /etc/gshadow – Secure group account information.
 - /etc/login.defs – Shadow password suite configuration..
+
+### ADD USER OR GROUP
+
+NOTE:
+
+Only root user has the permission to perform this below commands.
+
+To add a new user or group,
+
+```bash
+sudo adduser username
+```
+
+![](https://imgur.com/wWwteJA.jpg)
+
+```bash
+sudo addgroup groupname
+```
+
+![](https://imgur.com/sEWC06K.jpg)
 
 ### Change User Shell
 
@@ -352,3 +432,215 @@ rw means as you might expect "read and write", meaning the user has read write p
 ![](https://imgur.com/hu9mkJC.jpg)
 
 Note: It is possible to give someone no perms to a file, You can just put 0 as the digit. 770 Means that everyone that isnt a part of the user or group cant do anything to the file.
+
+## CHOWN COMMAND
+
+Recall that ls allows shows us our username twice in one of it's fields.
+
+![](https://imgur.com/8kYdiUp.jpg)
+
+These attributes are the user, and group attributes resepectively.
+
+Chown command, which allows us to change the user and group for any file.
+
+Note: You can only use chown if you are "above" that other user, meaning that chown is best done with the root(administrator) user.
+
+```bash
+chown owner : group file
+```
+
+![](https://imgur.com/Q0NwmUk.jpg)
+
+You can also use chown without specifying a group. So you can just use chown user file if you only wanted to change the user but keep the group.
+
+```bash
+chown owner : file
+```
+
+If we want change the owner or group name permission in each of the file in the root directory at once.
+
+```bash
+chown -R owner : group file
+```
+
+## rm Command
+
+rm can make the linux system completely useless if we use it carelessly.
+
+```bash
+rm file
+```
+
+It is not worth noting that you need write permissions to the file to deleted so you cant just delete any file if you're a regular user.
+
+![](https://imgur.com/UkPkxAh.png)
+
+To remove every file in the directory, we need to use **-r** flag.
+
+```bash
+rm -r directory
+
+# To supress the warning prompts
+
+rm -f file
+```
+
+## mv Command
+
+mv allows you to move files from one place to another. The syntax for the command is:
+
+```bash
+# To move the file to the user's home directory (relative path)
+
+mv file ~
+```
+
+Note: You can also use mv to change the name of file.
+
+```bash
+mv file ~/renamedFile
+```
+
+## cp Command
+
+cp does mainly the same thing as mv, except instead of moving the file it duplicates(copies) it.
+
+```bash
+cp file ~/renamedFile
+```
+
+## cd and mkdir
+
+Linux allows you to change the location of the current directory through the use of the cd command.
+
+![](https://imgur.com/Wd1D6H4.jpg)
+
+For eg, to move to the user's home directory,
+
+```bash
+cd ~
+```
+
+## ln
+
+ln is a weird one, because it has two different main uses. One of those is what's known as **"hard linking"**, which completely duplicates the file, and links the duplicate to the original copy. Meaning What ever is done to the created link, is also done to the original file.
+
+```bash
+ln source destination
+```
+
+![](https://imgur.com/GFFFO2u.jpg)
+
+It's important to be very careful with hard links, as depending on what you're doing it can be very easy to erase data from a file.
+
+The next form of linking is **symbolic linking(symlink)**.
+
+While a hard linked file contains the data in the original file, a symbolic link is just a glorified reference. Meaning that the actual symbolic link has no data in it at all, it's just a reference to another file.
+
+The syntax for a symbolic link is the exact same, but it uses the -s flag, so to create a symbolic link, you would run
+
+```bash
+ln -s file destination
+```
+
+![](https://imgur.com/9E6e92K.jpg)
+
+NOTE:
+
+ls even shows that its a symbolic link with the arrow pointing to what the link is referencing. It is important to note the permissions on the symlink. It has full 777 perms meaning that in theory you can execute the symlink, however since it is just a reference, in reality it has the same perms as the original file.
+
+![](https://imgur.com/7r8Jmow.jpg)
+
+## FIND COMMAND
+
+**find** is an incredibly powerful, but incredibly simple command. It allows you to do just as it says, find files. It does this by listing every file in the current directory,
+
+It is worth noting that find is recursive, so it searches every directory that is in the original directory you provided.
+
+```bash
+# To find every file in the user's home directory
+find ~/
+
+# To list every file in the OS.
+find /
+```
+
+NOTE:
+
+Only those files or directories would be listed for whom that particular user has the permission, means you cant list every file for every user.
+
+```bash
+# To list every file owned by particular user.
+find dir -user username
+
+
+# To list every file owned by particular group.
+find dir -group groupname
+
+
+#To find all *.c file belongs to a group called “ftpusers” in /data/project directory, run:
+
+find /data/project -group ftpusers -name "*.c"
+
+# To do case insensitive search
+
+find /data/project -group ftpusers -iname "*.c"
+
+#Find files by two users vivek and wendy
+
+### match files only ##
+
+find / -type f -user vivek -o -user wendy
+
+### match dirs only ##
+
+find / -type d -user vivek -o -user wendy
+```
+
+### Find the files with particular permissions.
+
+```bash
+find -perm mode
+```
+
+We can specify the MODE in three different ways as listed below.
+
+- If we specify the mode without any prefixes, it will find files of **exact** permissions.
+
+- If we use “-“ prefix with mode, **at least** the files should have the given permission, not the exact permission.
+
+- If we use “/” prefix, either the owner, the group, or other should have permission to the file.
+
+Refer this link for more info. https://www.ostechnix.com/find-files-based-permissions/
+
+## GREP
+
+The most useful command in linux command line.
+
+It allows you find data inside of data. When working with large files, or a large output, it is arguably the best way to narrow the output down to better find what your looking for.
+
+To find the file **test1234** in the whole OS whose location is unknown.
+
+```bash
+find /* | grep test1234
+```
+
+![](https://imgur.com/IR7M08S.jpg)
+
+We can use the grep to find the content string in the file, and we can list the line number using **-n** flag.
+
+```bash
+grep "string" testFile -n
+```
+
+![](https://imgur.com/xPWWXQe.jpg)
+
+NOTE:
+
+We can use the **regular expressions** instead of strings.
+
+### NANO
+
+nano is a terminal based text editor. The syntax for nano is `nano <file you want to write to>`
+
+### IMPORTANT FILES AND DIRECTORIES
