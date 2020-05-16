@@ -644,3 +644,102 @@ We can use the **regular expressions** instead of strings.
 nano is a terminal based text editor. The syntax for nano is `nano <file you want to write to>`
 
 ### IMPORTANT FILES AND DIRECTORIES
+
+- **/etc/passwd** - Stores user information - Often used to see all the users on a system
+
+Understanding this file:
+
+The /etc/passwd contains one entry per line for each user (user account) of the system. All fields are separated by a colon (:) symbol. Total of seven fields as follows. Generally, /etc/passwd file entry looks as follows:
+
+![](https://www.cyberciti.biz/media/ssb.images/uploaded_images/passwd-file-791527.png)
+
+**/etc/passwd Format**
+
+From the above image:
+
+1. Username: It is used when user logs in. It should be between 1 and 32 characters in length.
+
+2. Password: An x character indicates that encrypted password is stored in /etc/shadow file. Please note that you need to use the passwd command to computes the hash of a password typed at the CLI or to store/update the hash of the password in /etc/shadow file.
+3. User ID (UID): Each user must be assigned a user ID (UID). UID 0 (zero) is reserved for root and UIDs 1-99 are reserved for other predefined accounts. Further UID 100-999 are reserved by system for administrative and system accounts/groups.
+4. Group ID (GID): The primary group ID (stored in /etc/group file)
+5. User ID Info: The comment field. It allow you to add extra information about the users such as user’s full name, phone number etc. This field use by finger command.
+6. Home directory: The absolute path to the directory the user will be in when they log in. If this directory does not exists then users directory becomes /
+7. Command/shell: The absolute path of a command or shell (/bin/bash). Typically, this is a shell. Please note that it does not have to be a shell.
+
+To list all the users, simply use the cat command
+
+```bash
+cat /etc/passwd
+```
+
+To search for a username called tom, use the grep command:
+
+```bash
+grep tom /etc/passwd
+
+#OR
+
+cat /etc/passwd | grep -e "root"
+```
+
+**Reading /etc/passwd file**
+
+```bash
+#!/bin/bash
+# seven fields from /etc/passwd stored in $f1,f2...,$f7
+#
+while IFS=: read -r f1 f2 f3 f4 f5 f6 f7
+do
+ echo "User $f1 use $f7 shell and stores files in $f6 directory."
+done < /etc/passwd
+```
+
+![](https://www.cyberciti.biz/media/new/faq/2006/02/Understanding-etc-passwd-file-format-for-Linux-and-Unix-systems.png)
+
+Also refer this link for more clarity of passwd file as well as shadow file. https://www.digitalocean.com/community/tutorials/how-to-use-passwd-and-adduser-to-manage-passwords-on-a-linux-vps
+
+- **/etc/shadow file**
+
+The **/etc/shadow** file stores actual password in encrypted format (more like the hash of the password) for user’s account with additional properties related to user password.
+
+![](https://www.cyberciti.biz/media/new/uploaded_images/shadow-file-795497.png)
+
+1. **Username** : It is your login name.
+2. **Password** : It is your encrypted password. The password should be minimum 8-12 characters long including special characters, digits, lower case alphabetic and more. Usually password format is set to $id$salt$hashed, The $id is the algorithm used On GNU/Linux as follows:
+   - $1$ is MD5
+   - $2a$ is Blowfish
+   - $2y$ is Blowfish
+   - $5$ is SHA-256
+   - $6$ is SHA-512
+3. **Last password change (lastchanged)**: Days since Jan 1, 1970 that password was last changed
+4. **Minimum** : The minimum number of days required between password changes i.e. the number of days left before the user is allowed to change his/her password
+5. **Maximum** : The maximum number of days the password is valid (after that user is forced to change his/her password)
+6. **Warn** : The number of days before password is to expire that user is warned that his/her password must be changed
+7. **Inactive** : The number of days after password expires that account is disabled
+   Expire : days since Jan 1, 1970 that account is disabled i.e. an absolute date specifying when the login may no longer be used.
+
+The encrypted password consists of 13 to 24 characters from the 64 character alphabet a through z, A through Z, 0 through 9, \. and /. Optionally it can start with a “$” character. This means the encrypted password was generated using another (not DES) algorithm. For example if it starts with “$1\$” it means the MD5-based algorithm was used. Please note that a password field which starts with a exclamation mark (!) means that the password is locked. The remaining characters on the line represent the password field before the password was locked.
+
+Read this link for more info : https://www.cyberciti.biz/faq/understanding-etcshadow-file/
+
+## Installing a package
+
+To install packages you need root permissions, as each package will likely modify some system critical directories such as /usr.
+
+The syntax to install packages is `apt install package`
+
+## Processes
+
+A process is just another word for a running program. A list of user created processes can be viewed with the `ps` command.
+
+![](https://imgur.com/pP9hnen.png)
+
+To view a list of all system processes, you have to use the -ef flag `ps -ef`
+
+![](https://imgur.com/WiLQ5Rq.png)
+
+Every process that is currently running on the system is listed, along with some basic information about the process. Arguably the most interesting part about that list is the second column, the 3-5 digit numbers. Those are known as Process ID's(PID's) and they're how you interact with the processes. 90% of the time you'll likely be wanting to stop these processes and that's done with the kill command(an apt choice of naming I know).
+
+The syntax of kill is `kill <PID>`.
+
+Another useful way to interact with PID's is through the command `top`. `top` shows you what processes are taking up the most system resources, which allows you to manage the resource allocation on your system by killing unneeded processes.
