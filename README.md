@@ -722,6 +722,26 @@ The encrypted password consists of 13 to 24 characters from the 64 character alp
 
 Read this link for more info : https://www.cyberciti.biz/faq/understanding-etcshadow-file/
 
+## **/etc/hosts** file
+
+All operating systems with network support have a hosts file in order to translate hostnames to IP addresses. Whenever you open a website by typing its hostname, your system will read through the hosts file to check for the corresponding IP and then open it. The hosts file is a simple text file located in the etc folder on Linux and Mac OS (/etc/hosts). Windows has a hosts file as well, on Windows you can find it in Windows\System32\drivers\etc\
+
+![](2020-05-16-16-35-40.png)
+
+From what we mentioned, you might be expecting this file to have a very long list of IPs and corresponding hostnames; but that is not true. The hosts file only contains a number of lines;
+
+The first part, by default, contains hostnames and IP addresses of your localhost and machine. This is the part you will usually modify in order to make the desired changes.
+The second part has information about IPv6 capable hosts and you will hardly be editing these lines.
+Whenever you type an address, your system will check the hosts file for its presence; if it is present there, you will be directed to the corresponding IP. If the hostname is not defined in the hosts file, your system will check the DNS server of your internet to look up for the corresponding IP and redirect you accordingly.
+
+What hosts file act is the local dns of the system, when we hit any domain, the system would first check the hosts file and if it doesn't find, then it goes to the DNS server of the internet to check.
+
+Refer these links for more info:
+
+https://vitux.com/linux-hosts-file/
+
+https://unix.stackexchange.com/questions/421491/what-is-the-purpose-of-etc-hosts
+
 ## Installing a package
 
 To install packages you need root permissions, as each package will likely modify some system critical directories such as /usr.
@@ -743,3 +763,111 @@ Every process that is currently running on the system is listed, along with some
 The syntax of kill is `kill <PID>`.
 
 Another useful way to interact with PID's is through the command `top`. `top` shows you what processes are taking up the most system resources, which allows you to manage the resource allocation on your system by killing unneeded processes.
+
+## How to unzip a file using Terminal
+
+```bash
+sudo apt-get install unzip
+
+unzip file.zip -d destination_folder
+
+#If source and destination are same
+unzip file.zip
+
+#To unzip a tar.gz file
+tar -xvf file.tar.gz
+```
+
+## What are Cronjobs and where are they saved?
+
+Refer this link for more info.
+
+https://www.cyberciti.biz/faq/how-do-i-add-jobs-to-cron-under-linux-or-unix-oses/
+
+![](2020-05-17-00-24-32.png)
+
+## Where are command Aliases stored
+
+Refer this link for more info.
+http://lewiscomputerhowto.blogspot.com/2014/01/how-to-make-permanent-alias-in-kali.html
+
+![](2020-05-17-00-27-50.png)
+
+Open the .bashrc file and go down till we find where aliases stored.
+
+### This is how we write command aliases.
+
+![](2020-05-17-00-29-25.png)
+
+## What is MOTD file?
+
+![](2020-05-17-00-30-33.png)
+
+Refer this link for more info
+
+https://www.networkworld.com/article/3219736/how-to-use-the-motd-file-to-get-linux-users-to-pay-attention.html
+When some user logs in like I take SSH into any of the host machine, the message is displayed after a sucessful login attempt.
+
+![](2020-05-17-00-34-06.png)
+![](2020-05-17-00-34-57.png)
+
+## How to find the diff or compare the two script files?
+
+https://www.softwaretestinghelp.com/compare-two-files-unix/
+
+![](2020-05-17-00-38-01.png)
+
+```bash
+
+cmp file1 file2
+
+diff file1 file2
+```
+
+![](2020-05-17-00-40-55.png)
+![](2020-05-17-00-40-59.png)
+
+diff way
+
+![](2020-05-17-00-41-14.png)
+
+## Linux Log Files
+
+![](2020-05-19-19-09-14.png)
+
+![](2020-05-19-19-10-08.png)
+
+## OS Version, hostname, Kernel Version, Operating System Information and Architecture
+
+```bash
+hostnamectl
+```
+
+![](2020-05-19-19-11-55.png)
+
+To directly find the kernel version
+
+```bash
+uname -r
+```
+
+![](2020-05-19-19-30-32.png)
+![](2020-05-19-19-29-04.png)
+
+File that contains all this system information
+
+```bash
+cat /etc/os-release
+```
+
+The lsb_release command gives LSB (Linux Standard Base) and distribution-specific information on the CLI. The syntax is:
+
+```bash
+lsb_release -a
+```
+
+![](2020-05-19-19-32-41.png)
+
+![](2020-05-19-19-34-39.png)
+
+![](2020-05-19-19-34-56.png)
